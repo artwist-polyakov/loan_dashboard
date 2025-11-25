@@ -26,7 +26,6 @@ export function Sidebar() {
       <aside
         className={cn(
           'fixed left-0 top-14 z-40 h-[calc(100vh-3.5rem)] w-80 overflow-y-auto border-r bg-background transition-transform duration-300',
-          'md:translate-x-0',
           sidebarCollapsed ? '-translate-x-full' : 'translate-x-0'
         )}
       >

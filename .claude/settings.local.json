@@ -14,7 +14,8 @@
       "Bash(ls:*)",
       "WebFetch(domain:npm-compare.com)",
       "WebFetch(domain:dmitriiboikov.com)",
-      "WebFetch(domain:blog.react-pdf.dev)"
+      "WebFetch(domain:blog.react-pdf.dev)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

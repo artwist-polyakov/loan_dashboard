@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { useUIStore } from '@/store/uiStore';
 import { useInputStore } from '@/store/inputStore';
+import { PdfExportButton } from '@/components/pdf/PdfExportButton';
 import { Info, RotateCcw, Menu } from 'lucide-react';
 
 export function Header() {
@@ -14,7 +15,6 @@ export function Header() {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
             onClick={toggleSidebar}
           >
             <Menu className="h-5 w-5" />
@@ -28,6 +28,7 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-2">
+          <PdfExportButton />
           <Button variant="ghost" size="sm" onClick={resetToDefaults}>
             <RotateCcw className="h-4 w-4 mr-1" />
             <span className="hidden sm:inline">Сбросить</span>

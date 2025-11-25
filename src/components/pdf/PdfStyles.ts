@@ -4,8 +4,8 @@ import { StyleSheet, Font } from '@react-pdf/renderer';
 Font.register({
   family: 'Roboto',
   fonts: [
-    { src: '/fonts/Roboto-Regular.ttf', fontWeight: 'normal' },
-    { src: '/fonts/Roboto-Bold.ttf', fontWeight: 'bold' },
+    { src: `${window.location.origin}/fonts/Roboto-Regular.ttf`, fontWeight: 'normal' },
+    { src: `${window.location.origin}/fonts/Roboto-Bold.ttf`, fontWeight: 'bold' },
   ],
 });
 

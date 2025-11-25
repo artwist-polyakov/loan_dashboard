@@ -8,7 +8,9 @@ import { BarChart3, TrendingUp } from 'lucide-react';
 
 export function ChartTabs() {
   const { activeChartTab, setActiveChartTab } = useUIStore();
-  const { debtChartRef, netWorthChartRef } = useChartRefs();
+  const chartRefs = useChartRefs();
+  const debtChartRef = chartRefs?.debtChartRef;
+  const netWorthChartRef = chartRefs?.netWorthChartRef;
 
   return (
     <Card>

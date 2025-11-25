@@ -14,7 +14,9 @@ interface PdfExportButtonProps {
 }
 
 export function PdfExportButton({ className }: PdfExportButtonProps) {
-  const { debtChartRef, netWorthChartRef } = useChartRefs();
+  const chartRefs = useChartRefs();
+  const debtChartRef = chartRefs?.debtChartRef;
+  const netWorthChartRef = chartRefs?.netWorthChartRef;
   const [isLoading, setIsLoading] = useState(false);
   const result = useComparisonResult();
   const { inputs } = useInputStore();

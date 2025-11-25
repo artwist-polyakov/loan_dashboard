@@ -18,10 +18,6 @@ export function ChartRefsProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function useChartRefs(): ChartRefs {
-  const context = useContext(ChartRefsContext);
-  if (!context) {
-    throw new Error('useChartRefs must be used within ChartRefsProvider');
-  }
-  return context;
+export function useChartRefs(): ChartRefs | null {
+  return useContext(ChartRefsContext);
 }
