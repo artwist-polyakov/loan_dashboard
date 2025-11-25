@@ -7,7 +7,7 @@ import { ChartRefsProvider } from '@/components/charts/ChartRefsContext';
 
 function App() {
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={200} skipDelayDuration={0}>
       <ChartRefsProvider>
         <div className="min-h-screen bg-background">
           <Header />
