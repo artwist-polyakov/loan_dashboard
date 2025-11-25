@@ -104,6 +104,10 @@ export function NumberInput({
               side="top"
               align="center"
               sideOffset={8}
+              alignOffset={0}
+              collisionPadding={16}
+              avoidCollisions={true}
+              sticky="always"
               onPointerDownOutside={() => setTooltipOpen(false)}
             >
               <p>{tooltip}</p>
