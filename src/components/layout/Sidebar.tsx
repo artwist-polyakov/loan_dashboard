@@ -5,6 +5,7 @@ import { DepositInputs } from '@/components/inputs/DepositInputs';
 import { RentalInputs } from '@/components/inputs/RentalInputs';
 import { RenovationInputs } from '@/components/inputs/RenovationInputs';
 import { InflationEqualizer } from '@/components/inputs/InflationEqualizer';
+import { SettingsActions } from '@/components/inputs/SettingsActions';
 import { cn } from '@/lib/utils/cn';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -41,6 +42,7 @@ export function Sidebar() {
         </div>
 
         <div className="space-y-4 p-4">
+          <SettingsActions />
           <PropertyInputs />
           <MortgageInputs />
           <DepositInputs />
