@@ -68,6 +68,7 @@ export function InputsSection({ inputs }: InputsSectionProps) {
             <Text style={styles.h3}>Ремонт</Text>
             <ParamRow label="Требуется" value="Да" />
             <ParamRow label="Стоимость за м²" value={formatCurrency(inputs.renovationCostPerSqm)} />
+            <ParamRow label="Возврат при продаже" value={formatPercent(inputs.renovationReturnRate)} />
             <ParamRow label="Год сдачи дома" value={String(inputs.completionYear)} />
           </View>
 

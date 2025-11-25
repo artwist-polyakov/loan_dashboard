@@ -61,6 +61,16 @@ export function RenovationInputs() {
               max={VALIDATION_RANGES.renovationCostPerSqm.max}
             />
 
+            <NumberInput
+              label="Возврат ремонта при продаже"
+              value={inputs.renovationReturnRate}
+              onChange={(v) => setInput('renovationReturnRate', v)}
+              suffix="%"
+              tooltip="Процент стоимости ремонта, который вернётся в цене квартиры при продаже (обычно 40-80%)"
+              min={0}
+              max={100}
+            />
+
             {inputs.area && renovationCost > 0 && (
               <div className="rounded-md bg-muted/10 p-3">
                 <div className="text-sm text-muted">

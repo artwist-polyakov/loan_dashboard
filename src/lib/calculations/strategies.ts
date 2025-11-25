@@ -42,6 +42,7 @@ export function compareStrategies(params: InputParameters): ComparisonResult {
     monthlyRent,
     renovationRequired,
     renovationCostPerSqm,
+    renovationReturnRate,
     completionYear,
     expectedPricePerSqmAtSale,
   } = params;
@@ -104,6 +105,16 @@ export function compareStrategies(params: InputParameters): ComparisonResult {
       )
     : 0;
 
+  // Возврат ремонта в стоимости недвижимости при продаже
+  const renovationValueAdded = renovationCost * (renovationReturnRate / 100);
+
+  // Скорректированная стоимость недвижимости с учетом ремонта
+  const adjustedPropertyValueAtEnd: PropertyValueScenarios = {
+    pessimistic: propertyValueAtEnd.pessimistic + renovationValueAdded,
+    base: propertyValueAtEnd.base + renovationValueAdded,
+    optimistic: propertyValueAtEnd.optimistic + renovationValueAdded,
+  };
+
   // Годы от сдачи дома до конца анализа
   const yearsFromCompletionToEnd = Math.max(0, analysisPeriod - (completionYear - CURRENT_YEAR));
 
@@ -127,7 +138,7 @@ export function compareStrategies(params: InputParameters): ComparisonResult {
 
   // === СТРАТЕГИЯ A: Купить и продать ===
   const strategyA = calculateStrategyA(
-    propertyValueAtEnd,
+    adjustedPropertyValueAtEnd,
     remainingDebt,
     mortgagePayments.totalPaid,
     mortgagePayments.totalInterest,
@@ -137,7 +148,7 @@ export function compareStrategies(params: InputParameters): ComparisonResult {
 
   // === СТРАТЕГИЯ B: Купить и сдавать ===
   const strategyB = calculateStrategyB(
-    propertyValueAtEnd,
+    adjustedPropertyValueAtEnd,
     remainingDebt,
     mortgagePayments.totalPaid,
     mortgagePayments.totalInterest,
