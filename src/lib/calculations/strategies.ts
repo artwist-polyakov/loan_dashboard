@@ -19,7 +19,7 @@ import {
   getFinalBalance,
   getTotalInterest,
 } from './deposit';
-import { calculatePropertyValue } from './inflation';
+import { calculatePropertyValueWithCompletion } from './inflation';
 import { calculateRentalIncome } from './rental';
 import { calculateRenovationCost, calculateRenovationOpportunityCost } from './renovation';
 
@@ -43,6 +43,7 @@ export function compareStrategies(params: InputParameters): ComparisonResult {
     renovationRequired,
     renovationCostPerSqm,
     completionYear,
+    expectedPricePerSqmAtCompletion,
   } = params;
 
   // Базовые расчёты
@@ -82,12 +83,15 @@ export function compareStrategies(params: InputParameters): ComparisonResult {
   const mortgagePayments = getTotalPayments(mortgageSchedule, analysisMonths);
 
   // Стоимость недвижимости через N лет (3 сценария)
-  const propertyValueAtEnd = calculatePropertyValue(
-    propertyPrice,
-    effectiveInflation,
+  const propertyValueAtEnd = calculatePropertyValueWithCompletion({
+    currentPrice: propertyPrice,
+    inflationRate: effectiveInflation,
     analysisPeriod,
-    useEqualizer
-  );
+    useYearlyRates: useEqualizer,
+    expectedPricePerSqmAtCompletion,
+    area,
+    completionYear,
+  });
 
   // Стоимость ремонта
   const renovationCost = renovationRequired && area

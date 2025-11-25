@@ -1,4 +1,64 @@
 import type { PropertyValueScenarios } from '../types/results';
+import { CURRENT_YEAR } from '../utils/constants';
+
+interface PropertyValueOptions {
+  currentPrice: number;
+  inflationRate: number | number[];
+  analysisPeriod: number;
+  useYearlyRates?: boolean;
+  // Опциональные параметры для плановой цены на сдачу
+  expectedPricePerSqmAtCompletion?: number | null;
+  area?: number | null;
+  completionYear?: number;
+}
+
+/**
+ * Расчёт стоимости недвижимости через N лет по трём сценариям
+ * С поддержкой плановой цены на момент сдачи дома
+ */
+export function calculatePropertyValueWithCompletion(
+  options: PropertyValueOptions
+): PropertyValueScenarios {
+  const {
+    currentPrice,
+    inflationRate,
+    analysisPeriod,
+    useYearlyRates = false,
+    expectedPricePerSqmAtCompletion,
+    area,
+    completionYear,
+  } = options;
+
+  // Если задана плановая цена и площадь — используем её
+  if (expectedPricePerSqmAtCompletion && area && completionYear) {
+    const yearsToCompletion = Math.max(0, completionYear - CURRENT_YEAR);
+    const yearsAfterCompletion = Math.max(0, analysisPeriod - yearsToCompletion);
+
+    // Цена на момент сдачи
+    const priceAtCompletion = area * expectedPricePerSqmAtCompletion;
+
+    // Если сдача уже прошла — растим от текущей цены
+    if (yearsToCompletion <= 0) {
+      return calculatePropertyValue(currentPrice, inflationRate, analysisPeriod, useYearlyRates);
+    }
+
+    // Растим от плановой цены на сдачу до конца анализа
+    // Используем ставки инфляции начиная с года сдачи
+    const inflationFromCompletion = useYearlyRates && Array.isArray(inflationRate)
+      ? inflationRate.slice(yearsToCompletion)
+      : inflationRate;
+
+    return calculatePropertyValue(
+      priceAtCompletion,
+      inflationFromCompletion,
+      yearsAfterCompletion,
+      useYearlyRates
+    );
+  }
+
+  // Стандартный расчёт
+  return calculatePropertyValue(currentPrice, inflationRate, analysisPeriod, useYearlyRates);
+}
 
 /**
  * Расчёт стоимости недвижимости через N лет по трём сценариям

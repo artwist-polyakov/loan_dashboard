@@ -25,6 +25,9 @@ export interface InputParameters {
   renovationRequired: boolean;
   renovationCostPerSqm: number;   // руб, по умолчанию 170000
   completionYear: number;         // год сдачи дома
+
+  // Плановая цена
+  expectedPricePerSqmAtCompletion: number | null;  // руб/м², если задано — используется для расчёта
 }
 
 export const DEFAULT_INPUTS: InputParameters = {
@@ -43,4 +46,5 @@ export const DEFAULT_INPUTS: InputParameters = {
   renovationRequired: true,
   renovationCostPerSqm: 170_000,
   completionYear: new Date().getFullYear(),
+  expectedPricePerSqmAtCompletion: null,
 };
