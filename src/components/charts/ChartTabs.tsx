@@ -3,10 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useUIStore } from '@/store/uiStore';
 import { DebtVsDepositChart } from './DebtVsDepositChart';
 import { NetWorthChart } from './NetWorthChart';
+import { useChartRefs } from './ChartRefsContext';
 import { BarChart3, TrendingUp } from 'lucide-react';
 
 export function ChartTabs() {
   const { activeChartTab, setActiveChartTab } = useUIStore();
+  const { debtChartRef, netWorthChartRef } = useChartRefs();
 
   return (
     <Card>
@@ -30,11 +32,15 @@ export function ChartTabs() {
           </TabsList>
 
           <TabsContent value="debtDeposit">
-            <DebtVsDepositChart />
+            <div ref={debtChartRef}>
+              <DebtVsDepositChart />
+            </div>
           </TabsContent>
 
           <TabsContent value="netWorth">
-            <NetWorthChart />
+            <div ref={netWorthChartRef}>
+              <NetWorthChart />
+            </div>
           </TabsContent>
         </Tabs>
       </CardContent>

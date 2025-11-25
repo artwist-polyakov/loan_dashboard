@@ -3,6 +3,7 @@ import { useInputStore } from '@/store/inputStore';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { exportSettings, importSettings } from '@/lib/utils/settings-io';
+import { PdfExportButton } from '@/components/pdf/PdfExportButton';
 import { Download, Upload, RotateCcw } from 'lucide-react';
 
 export function SettingsActions() {
@@ -72,6 +73,8 @@ export function SettingsActions() {
           >
             <RotateCcw className="h-4 w-4" />
           </Button>
+
+          <PdfExportButton />
 
           <input
             ref={fileInputRef}

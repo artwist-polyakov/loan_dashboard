@@ -3,18 +3,21 @@ import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { MainContent } from '@/components/layout/MainContent';
 import { InfoModal } from '@/components/layout/InfoModal';
+import { ChartRefsProvider } from '@/components/charts/ChartRefsContext';
 
 function App() {
   return (
     <TooltipProvider>
-      <div className="min-h-screen bg-background">
-        <Header />
-        <div className="flex">
-          <Sidebar />
-          <MainContent />
+      <ChartRefsProvider>
+        <div className="min-h-screen bg-background">
+          <Header />
+          <div className="flex">
+            <Sidebar />
+            <MainContent />
+          </div>
+          <InfoModal />
         </div>
-        <InfoModal />
-      </div>
+      </ChartRefsProvider>
     </TooltipProvider>
   );
 }
