@@ -32,6 +32,9 @@ export function SummaryCards() {
       secondaryItems: [
         { label: 'Чистый капитал', value: result.strategyB.netEquity.base },
         { label: 'Доход от аренды', value: result.strategyB.totalRentalIncome },
+        ...(result.strategyB.renovationCost > 0
+          ? [{ label: 'Ремонт', value: -result.strategyB.renovationCost }]
+          : []),
         { label: 'Денежный поток', value: result.strategyB.cashFlow, highlight: true },
       ],
     },
