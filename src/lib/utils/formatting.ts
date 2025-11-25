@@ -4,10 +4,10 @@
 export function formatCurrency(value: number, compact = false): string {
   if (compact) {
     if (Math.abs(value) >= 1_000_000) {
-      return `${(value / 1_000_000).toFixed(1)} млн ₽`;
+      return `${(value / 1_000_000).toFixed(1).replace('.', ',')} млн ₽`;
     }
     if (Math.abs(value) >= 1_000) {
-      return `${(value / 1_000).toFixed(0)} тыс. ₽`;
+      return `${(value / 1_000).toFixed(0).replace('.', ',')} тыс. ₽`;
     }
   }
   return new Intl.NumberFormat('ru-RU', {
@@ -31,7 +31,7 @@ export function formatNumber(value: number, decimals = 0): string {
  * Форматирование процента
  */
 export function formatPercent(value: number, decimals = 1): string {
-  return `${value.toFixed(decimals)}%`;
+  return `${value.toFixed(decimals).replace('.', ',')}%`;
 }
 
 /**
