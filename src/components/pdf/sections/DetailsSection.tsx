@@ -18,8 +18,8 @@ export function DetailsSection({ result, inputs }: DetailsSectionProps) {
       <View style={styles.card}>
         <Text style={styles.h3}>Стратегия A: Ипотека + продажа</Text>
 
-        <View style={styles.grid3}>
-          <View style={styles.gridItem}>
+        <View style={styles.grid2}>
+          <View style={styles.grid2Item}>
             <Text style={[styles.textMuted, { marginBottom: 4 }]}>Ипотека</Text>
             <DetailRow label="Сумма кредита" value={formatCurrency(result.loanAmount)} />
             <DetailRow label="Ежемесячный платёж" value={formatCurrency(result.annuityPayment)} />
@@ -28,20 +28,14 @@ export function DetailsSection({ result, inputs }: DetailsSectionProps) {
             <DetailRow label="В т.ч. проценты" value={formatCurrency(result.strategyA.totalInterestPaid)} />
           </View>
 
-          <View style={styles.gridItem}>
-            <Text style={[styles.textMuted, { marginBottom: 4 }]}>Недвижимость</Text>
+          <View style={styles.grid2Item}>
+            <Text style={[styles.textMuted, { marginBottom: 4 }]}>Недвижимость и результат</Text>
             <DetailRow label="Начальная цена" value={formatCurrency(inputs.propertyPrice)} />
-            <DetailRow label="Цена (пессимист.)" value={formatCurrency(result.strategyA.propertyValueAtEnd.pessimistic)} />
             <DetailRow label="Цена (базовый)" value={formatCurrency(result.strategyA.propertyValueAtEnd.base)} />
-            <DetailRow label="Цена (оптимист.)" value={formatCurrency(result.strategyA.propertyValueAtEnd.optimistic)} />
-          </View>
-
-          <View style={styles.gridItem}>
-            <Text style={[styles.textMuted, { marginBottom: 4 }]}>Результат</Text>
             <DetailRow label="Остаток долга" value={formatCurrency(result.strategyA.remainingDebt)} />
             <DetailRow label="Выручка от продажи" value={formatCurrency(result.strategyA.netProceedsFromSale.base)} />
             {result.strategyA.renovationCost > 0 && (
-              <DetailRow label="Затраты на ремонт" value={formatCurrency(result.strategyA.renovationCost)} negative />
+              <DetailRow label="Ремонт" value={formatCurrency(result.strategyA.renovationCost)} negative />
             )}
             <DetailRow
               label="Прибыль/убыток"
@@ -57,34 +51,34 @@ export function DetailsSection({ result, inputs }: DetailsSectionProps) {
       <View style={styles.card}>
         <Text style={styles.h3}>Стратегия B: Ипотека + аренда</Text>
 
-        <View style={styles.grid3}>
-          <View style={styles.gridItem}>
-            <Text style={[styles.textMuted, { marginBottom: 4 }]}>Капитал</Text>
+        <View style={styles.grid2}>
+          <View style={styles.grid2Item}>
+            <Text style={[styles.textMuted, { marginBottom: 4 }]}>Капитал в недвижимости</Text>
             <DetailRow label="Стоимость недвижимости" value={formatCurrency(result.strategyB.propertyValueAtEnd.base)} />
             <DetailRow label="Остаток долга" value={formatCurrency(result.strategyB.remainingDebt)} />
-            <DetailRow label="Чистый капитал (пессимист.)" value={formatCurrency(result.strategyB.netEquity.pessimistic)} />
-            <DetailRow label="Чистый капитал (базовый)" value={formatCurrency(result.strategyB.netEquity.base)} />
-            <DetailRow label="Чистый капитал (оптимист.)" value={formatCurrency(result.strategyB.netEquity.optimistic)} />
+            <DetailRow label="Чистый капитал" value={formatCurrency(result.strategyB.netEquity.base)} />
+            <DetailRow label="Аренда за период" value={formatCurrency(result.strategyB.totalRentalIncome)} />
+            <DetailRow label="Ипотека за период" value={formatCurrency(result.strategyB.totalMortgagePayments)} negative />
           </View>
 
-          <View style={styles.gridItem}>
-            <Text style={[styles.textMuted, { marginBottom: 4 }]}>Аренда</Text>
-            <DetailRow label="Начальная ставка" value={`${formatCurrency(inputs.monthlyRent)}/мес`} />
-            <DetailRow label="Общий доход за период" value={formatCurrency(result.strategyB.totalRentalIncome)} />
-          </View>
-
-          <View style={styles.gridItem}>
-            <Text style={[styles.textMuted, { marginBottom: 4 }]}>Денежный поток</Text>
+          <View style={styles.grid2Item}>
+            <Text style={[styles.textMuted, { marginBottom: 4 }]}>Итоговые показатели</Text>
             <DetailRow label="Доход от аренды" value={formatCurrency(result.strategyB.totalRentalIncome)} />
-            <DetailRow label="Ипотечные платежи" value={formatCurrency(result.strategyB.totalMortgagePayments)} negative />
+            <DetailRow label="Выплаты по ипотеке" value={formatCurrency(result.strategyB.totalMortgagePayments)} negative />
             {result.strategyB.renovationCost > 0 && (
               <DetailRow label="Ремонт" value={formatCurrency(result.strategyB.renovationCost)} negative />
             )}
             <DetailRow
-              label="Итого денежный поток"
+              label="Денежный поток"
               value={formatCurrency(result.strategyB.cashFlow)}
               highlight
               positive={result.strategyB.cashFlow > 0}
+            />
+            <DetailRow
+              label="Капитал + аренда"
+              value={formatCurrency(result.strategyB.netEquity.base + result.strategyB.totalRentalIncome)}
+              highlight
+              positive
             />
           </View>
         </View>
@@ -94,34 +88,30 @@ export function DetailsSection({ result, inputs }: DetailsSectionProps) {
       <View style={styles.card}>
         <Text style={styles.h3}>Стратегия C: Банковский вклад</Text>
 
-        <View style={styles.grid3}>
-          <View style={styles.gridItem}>
-            <Text style={[styles.textMuted, { marginBottom: 4 }]}>Вклад</Text>
+        <View style={styles.grid2}>
+          <View style={styles.grid2Item}>
+            <Text style={[styles.textMuted, { marginBottom: 4 }]}>Вклад и доходность</Text>
             <DetailRow label="Начальный взнос" value={formatCurrency(inputs.downPayment)} />
             <DetailRow label="Ежемесячное пополнение" value={formatCurrency(result.annuityPayment + inputs.extraMonthlyPayment)} />
             <DetailRow label="Всего внесено" value={formatCurrency(result.strategyC.totalContributions)} />
-          </View>
-
-          <View style={styles.gridItem}>
-            <Text style={[styles.textMuted, { marginBottom: 4 }]}>Доходность</Text>
-            <DetailRow label="Ставка" value={formatPercent(inputs.depositRate)} />
+            <DetailRow label="Ставка вклада" value={formatPercent(inputs.depositRate)} />
             <DetailRow label="Начислено процентов" value={formatCurrency(result.strategyC.totalInterestEarned)} />
-            {result.strategyC.renovationSavingsInterest > 0 && (
-              <DetailRow label="% на сэконом. ремонт" value={formatCurrency(result.strategyC.renovationSavingsInterest)} />
-            )}
           </View>
 
-          <View style={styles.gridItem}>
-            <Text style={[styles.textMuted, { marginBottom: 4 }]}>Итог</Text>
+          <View style={styles.grid2Item}>
+            <Text style={[styles.textMuted, { marginBottom: 4 }]}>Итоговый капитал</Text>
             <DetailRow
-              label="Итого на вкладе"
+              label="Баланс вклада"
               value={formatCurrency(result.strategyC.finalBalance)}
               highlight
               positive
             />
             {result.strategyA.renovationCost > 0 && (
               <>
-                <DetailRow label="+ сэкономленный ремонт" value={formatCurrency(result.strategyA.renovationCost)} />
+                <DetailRow label="Сэкономлено на ремонте" value={formatCurrency(result.strategyA.renovationCost)} />
+                {result.strategyC.renovationSavingsInterest > 0 && (
+                  <DetailRow label="% на сэкономленный ремонт" value={formatCurrency(result.strategyC.renovationSavingsInterest)} />
+                )}
                 <DetailRow
                   label="Общий капитал"
                   value={formatCurrency(

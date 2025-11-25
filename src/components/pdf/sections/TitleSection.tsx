@@ -32,16 +32,18 @@ export function TitleSection({ result, inputs, date }: TitleSectionProps) {
         </Text>
       </View>
 
-      {/* Три карточки стратегий */}
-      <View style={styles.grid3}>
+      {/* Карточки стратегий в столбик */}
+      <View style={styles.stack}>
         <StrategyCard
           title={STRATEGY_NAMES.A}
           isWinner={result.winner === 'A'}
           primaryValue={result.strategyA.netProceedsFromSale.base}
           primaryLabel="Выручка от продажи"
           items={[
-            { label: 'Цена через N лет', value: result.strategyA.propertyValueAtEnd.base },
+            { label: 'Цена недвижимости', value: result.strategyA.propertyValueAtEnd.base },
             { label: 'Остаток долга', value: -result.strategyA.remainingDebt },
+            { label: 'Всего выплачено по ипотеке', value: -result.strategyA.totalMortgagePayments },
+            { label: 'В т.ч. проценты', value: -result.strategyA.totalInterestPaid },
             { label: 'Прибыль/убыток', value: result.strategyA.profitLoss.base, highlight: true },
           ]}
         />
@@ -52,6 +54,8 @@ export function TitleSection({ result, inputs, date }: TitleSectionProps) {
           primaryValue={result.strategyB.netEquity.base + result.strategyB.totalRentalIncome}
           primaryLabel="Капитал + аренда"
           items={[
+            { label: 'Стоимость недвижимости', value: result.strategyB.propertyValueAtEnd.base },
+            { label: 'Остаток долга', value: -result.strategyB.remainingDebt },
             { label: 'Чистый капитал', value: result.strategyB.netEquity.base },
             { label: 'Доход от аренды', value: result.strategyB.totalRentalIncome },
             { label: 'Денежный поток', value: result.strategyB.cashFlow, highlight: true },
@@ -65,8 +69,9 @@ export function TitleSection({ result, inputs, date }: TitleSectionProps) {
           primaryLabel="Итого на вкладе"
           items={[
             { label: 'Внесено', value: result.strategyC.totalContributions },
-            { label: 'Проценты', value: result.strategyC.totalInterestEarned },
-            { label: 'Доходность', value: result.strategyC.totalInterestEarned, highlight: true },
+            { label: 'Начислено процентов', value: result.strategyC.totalInterestEarned },
+            { label: 'Сэкономлено на ремонте', value: result.strategyA.renovationCost > 0 ? result.strategyA.renovationCost : 0 },
+            { label: 'Общий капитал', value: result.strategyC.finalBalance + (result.strategyA.renovationCost > 0 ? result.strategyA.renovationCost + result.strategyC.renovationSavingsInterest : 0), highlight: true },
           ]}
         />
       </View>
@@ -84,32 +89,36 @@ interface StrategyCardProps {
 
 function StrategyCard({ title, isWinner, primaryValue, primaryLabel, items }: StrategyCardProps) {
   return (
-    <View style={[styles.card, styles.gridItem]}>
+    <View style={styles.card}>
       <View style={styles.cardHeader}>
         <Text style={styles.cardTitle}>{title}</Text>
         {isWinner && <Text style={styles.cardBadge}>Лучший</Text>}
       </View>
 
-      <Text style={styles.textMuted}>{primaryLabel}</Text>
-      <Text style={[styles.h2, { marginTop: 2, marginBottom: 8 }]}>
-        {formatCurrency(primaryValue, true)}
-      </Text>
+      <View style={{ marginBottom: 8 }}>
+        <Text style={styles.textMuted}>{primaryLabel}</Text>
+        <Text style={[styles.h2, { marginTop: 2 }]}>
+          {formatCurrency(primaryValue, true)}
+        </Text>
+      </View>
 
-      {items.map((item, index) => {
-        let textColor = undefined;
-        if (item.highlight && item.value > 0) textColor = colors.success;
-        if (item.highlight && item.value < 0) textColor = colors.danger;
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 4 }}>
+        {items.map((item, index) => {
+          let textColor = undefined;
+          if (item.highlight && item.value > 0) textColor = colors.success;
+          if (item.highlight && item.value < 0) textColor = colors.danger;
 
-        return (
-          <View key={index} style={styles.labelValue}>
-            <Text style={styles.label}>{item.label}</Text>
-            <Text style={[styles.value, textColor ? { color: textColor } : {}]}>
-              {item.value >= 0 ? '+' : ''}
-              {formatCurrency(item.value, true)}
-            </Text>
-          </View>
-        );
-      })}
+          return (
+            <View key={index} style={[styles.labelValue, { width: '48%' }]}>
+              <Text style={styles.label}>{item.label}</Text>
+              <Text style={[styles.value, textColor ? { color: textColor } : {}]}>
+                {item.value >= 0 ? '+' : ''}
+                {formatCurrency(item.value, true)}
+              </Text>
+            </View>
+          );
+        })}
+      </View>
     </View>
   );
 }

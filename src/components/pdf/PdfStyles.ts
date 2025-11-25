@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
   page: {
     fontFamily: 'Roboto',
     fontSize: 10,
-    padding: 40,
+    padding: 30,
     backgroundColor: colors.white,
     color: colors.black,
   },
@@ -94,8 +94,8 @@ export const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.background,
     borderRadius: 4,
-    padding: 12,
-    marginBottom: 12,
+    padding: 10,
+    marginBottom: 10,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -175,13 +175,29 @@ export const styles = StyleSheet.create({
     marginVertical: 12,
   },
 
-  // Сетка из 3 колонок
+  // Сетка из 3 колонок (старая, не используется в новой верстке)
   grid3: {
     flexDirection: 'row',
     gap: 8,
   },
   gridItem: {
     flex: 1,
+  },
+
+  // Сетка из 2 колонок для более широких карточек
+  grid2: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 8,
+  },
+  grid2Item: {
+    flex: 1,
+  },
+
+  // Вертикальная компоновка (столбик)
+  stack: {
+    flexDirection: 'column',
+    gap: 8,
   },
 
   // Метка + значение
