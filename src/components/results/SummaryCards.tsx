@@ -20,6 +20,9 @@ export function SummaryCards() {
       secondaryItems: [
         { label: 'Цена через N лет', value: result.strategyA.propertyValueAtEnd.base },
         { label: 'Остаток долга', value: -result.strategyA.remainingDebt },
+        ...(result.strategyA.renovationCost > 0
+          ? [{ label: 'Ремонт (затраты)', value: -result.strategyA.renovationCost }]
+          : []),
         { label: 'Прибыль/убыток', value: result.strategyA.profitLoss.base, highlight: true },
       ],
     },
@@ -42,12 +45,20 @@ export function SummaryCards() {
       id: 'C' as const,
       title: STRATEGY_NAMES.C,
       icon: Landmark,
-      primaryValue: result.strategyC.finalBalance,
-      primaryLabel: 'Итого на вкладе',
+      primaryValue: result.strategyC.finalBalance + (result.strategyA.renovationCost > 0
+        ? result.strategyA.renovationCost + result.strategyC.renovationSavingsInterest
+        : 0),
+      primaryLabel: 'Итого накоплено',
       secondaryItems: [
-        { label: 'Внесено', value: result.strategyC.totalContributions },
-        { label: 'Проценты', value: result.strategyC.totalInterestEarned },
-        { label: 'Доходность', value: result.strategyC.totalInterestEarned, highlight: true },
+        { label: 'На вкладе', value: result.strategyC.finalBalance },
+        { label: 'Проценты по вкладу', value: result.strategyC.totalInterestEarned },
+        ...(result.strategyA.renovationCost > 0
+          ? [
+              { label: 'Ремонт (не потратили)', value: result.strategyA.renovationCost },
+              { label: '% на сэкономленный ремонт', value: result.strategyC.renovationSavingsInterest },
+            ]
+          : []),
+        { label: 'Доходность', value: result.strategyC.totalInterestEarned + result.strategyC.renovationSavingsInterest, highlight: true },
       ],
     },
   ];

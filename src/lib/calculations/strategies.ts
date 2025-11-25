@@ -161,10 +161,15 @@ export function compareStrategies(params: InputParameters): ComparisonResult {
     renovationOpportunityCost
   );
 
-  // Определение победителя (по базовому сценарию для A и B)
-  const strategyAValue = strategyA.profitLoss.base + downPayment + mortgagePayments.totalPaid;
-  const strategyBValue = strategyB.netEquity.base + strategyB.totalRentalIncome;
-  const strategyCValue = strategyC.finalBalance;
+  // Определение победителя (по базовому сценарию)
+  // Сравниваем итоговое богатство с учётом всех затрат
+
+  // A: выручка от продажи минус потраченный ремонт
+  const strategyAValue = strategyA.netProceedsFromSale.base - renovationCost;
+  // B: капитал + аренда минус ремонт
+  const strategyBValue = strategyB.netEquity.base + strategyB.totalRentalIncome - renovationCost;
+  // C: вклад + сэкономленный ремонт (который не потратили) + проценты на него
+  const strategyCValue = strategyC.finalBalance + renovationCost + renovationOpportunityCost;
 
   let winner: 'A' | 'B' | 'C';
   let winnerValue: number;
@@ -215,10 +220,10 @@ function calculateStrategyA(
     optimistic: propertyValueAtEnd.optimistic - remainingDebt,
   };
 
-  // Общие вложения (без ремонта, т.к. он увеличивает стоимость)
-  const totalInvested = downPayment + totalMortgagePayments;
+  // Общие вложения (включая ремонт — он не возвращается при продаже)
+  const totalInvested = downPayment + totalMortgagePayments + renovationCost;
 
-  // Прибыль/убыток = выручка - вложения (без ремонта)
+  // Прибыль/убыток = выручка - все вложения
   const profitLoss: PropertyValueScenarios = {
     pessimistic: netProceedsFromSale.pessimistic - totalInvested,
     base: netProceedsFromSale.base - totalInvested,
@@ -257,10 +262,11 @@ function calculateStrategyB(
     optimistic: propertyValueAtEnd.optimistic - remainingDebt,
   };
 
-  // Денежный поток = аренда - ипотечные платежи
-  const cashFlow = totalRentalIncome - totalMortgagePayments;
+  // Денежный поток = аренда - ипотечные платежи - ремонт
+  const cashFlow = totalRentalIncome - totalMortgagePayments - renovationCost;
 
-  const totalInvested = downPayment + totalMortgagePayments;
+  // Общие вложения (включая ремонт)
+  const totalInvested = downPayment + totalMortgagePayments + renovationCost;
 
   return {
     propertyValueAtEnd,
