@@ -39,11 +39,10 @@ export function SummaryCards() {
       id: 'A' as const,
       title: STRATEGY_NAMES.A,
       icon: Home,
-      primaryValue: result.strategyA.netProceedsFromSale.base,
-      primaryLabel: 'Выручка от продажи',
+      primaryValue: result.strategyA.netProceedsFromSale.base - renovationCost,
+      primaryLabel: 'Итого на руках',
       secondaryItems: [
-        { label: 'Цена через N лет', value: result.strategyA.propertyValueAtEnd.base },
-        { label: 'Остаток долга', value: -result.strategyA.remainingDebt },
+        { label: 'Выручка от продажи', value: result.strategyA.netProceedsFromSale.base },
         ...(result.strategyA.renovationCost > 0
           ? [{ label: 'Ремонт (затраты)', value: -result.strategyA.renovationCost }]
           : []),
@@ -54,13 +53,13 @@ export function SummaryCards() {
       id: 'B' as const,
       title: STRATEGY_NAMES.B,
       icon: TrendingUp,
-      primaryValue: result.strategyB.netEquity.base + result.strategyB.totalRentalIncome,
-      primaryLabel: 'Капитал + аренда',
+      primaryValue: result.strategyB.netEquity.base + result.strategyB.totalRentalIncome - renovationCost,
+      primaryLabel: 'Итого на руках',
       secondaryItems: [
         { label: 'Чистый капитал', value: result.strategyB.netEquity.base },
         { label: 'Доход от аренды', value: result.strategyB.totalRentalIncome },
         ...(result.strategyB.renovationCost > 0
-          ? [{ label: 'Ремонт', value: -result.strategyB.renovationCost }]
+          ? [{ label: 'Ремонт (затраты)', value: -result.strategyB.renovationCost }]
           : []),
         { label: 'Денежный поток', value: result.strategyB.cashFlow, highlight: true },
       ],
@@ -72,7 +71,7 @@ export function SummaryCards() {
       primaryValue: result.strategyC.finalBalance + (result.strategyA.renovationCost > 0
         ? result.strategyA.renovationCost + result.strategyC.renovationSavingsInterest
         : 0),
-      primaryLabel: 'Итого накоплено',
+      primaryLabel: 'Итого на руках',
       secondaryItems: [
         { label: 'На вкладе', value: result.strategyC.finalBalance },
         { label: 'Проценты по вкладу', value: result.strategyC.totalInterestEarned },
