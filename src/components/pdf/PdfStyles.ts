@@ -1,11 +1,15 @@
 import { StyleSheet, Font } from '@react-pdf/renderer';
 
+// Импорт шрифтов
+import RobotoRegular from '/fonts/Roboto-Regular.ttf?url';
+import RobotoBold from '/fonts/Roboto-Bold.ttf?url';
+
 // Регистрация шрифтов для кириллицы
 Font.register({
   family: 'Roboto',
   fonts: [
-    { src: `${window.location.origin}/fonts/Roboto-Regular.ttf`, fontWeight: 'normal' },
-    { src: `${window.location.origin}/fonts/Roboto-Bold.ttf`, fontWeight: 'bold' },
+    { src: RobotoRegular, fontWeight: 'normal' },
+    { src: RobotoBold, fontWeight: 'bold' },
   ],
 });
 
