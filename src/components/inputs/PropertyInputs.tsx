@@ -1,7 +1,7 @@
 import { useInputStore } from '@/store/inputStore';
 import { NumberInput } from './NumberInput';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { VALIDATION_RANGES, MIN_DOWN_PAYMENT_PERCENT, CURRENT_YEAR } from '@/lib/utils/constants';
+import { VALIDATION_RANGES, MIN_DOWN_PAYMENT_PERCENT } from '@/lib/utils/constants';
 import { formatCurrency } from '@/lib/utils/formatting';
 import { Home } from 'lucide-react';
 
@@ -66,13 +66,13 @@ export function PropertyInputs() {
           </div>
         )}
 
-        {inputs.area && inputs.completionYear > CURRENT_YEAR && (
+        {inputs.area && (
           <NumberInput
-            label={`Плановая цена м² (${inputs.completionYear})`}
-            value={inputs.expectedPricePerSqmAtCompletion ?? 0}
-            onChange={(v) => setInput('expectedPricePerSqmAtCompletion', v || null)}
+            label="Ожидаемая цена м² при продаже"
+            value={inputs.expectedPricePerSqmAtSale ?? 0}
+            onChange={(v) => setInput('expectedPricePerSqmAtSale', v || null)}
             suffix="₽/м²"
-            tooltip="Ожидаемая цена квадратного метра на момент сдачи дома. Если указана — расчёт ведётся от неё, а не от текущей цены"
+            tooltip="Ваша оценка цены м² на момент продажи (через N лет). Если указана — используется напрямую вместо расчёта по инфляции"
             min={0}
             max={2_000_000}
           />

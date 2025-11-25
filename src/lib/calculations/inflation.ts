@@ -1,22 +1,20 @@
 import type { PropertyValueScenarios } from '../types/results';
-import { CURRENT_YEAR } from '../utils/constants';
 
 interface PropertyValueOptions {
   currentPrice: number;
   inflationRate: number | number[];
   analysisPeriod: number;
   useYearlyRates?: boolean;
-  // Опциональные параметры для плановой цены на сдачу
-  expectedPricePerSqmAtCompletion?: number | null;
+  // Опциональные параметры для плановой цены при продаже
+  expectedPricePerSqmAtSale?: number | null;
   area?: number | null;
-  completionYear?: number;
 }
 
 /**
  * Расчёт стоимости недвижимости через N лет по трём сценариям
- * С поддержкой плановой цены на момент сдачи дома
+ * С поддержкой плановой цены при продаже
  */
-export function calculatePropertyValueWithCompletion(
+export function calculatePropertyValueWithExpected(
   options: PropertyValueOptions
 ): PropertyValueScenarios {
   const {
@@ -24,39 +22,23 @@ export function calculatePropertyValueWithCompletion(
     inflationRate,
     analysisPeriod,
     useYearlyRates = false,
-    expectedPricePerSqmAtCompletion,
+    expectedPricePerSqmAtSale,
     area,
-    completionYear,
   } = options;
 
-  // Если задана плановая цена и площадь — используем её
-  if (expectedPricePerSqmAtCompletion && area && completionYear) {
-    const yearsToCompletion = Math.max(0, completionYear - CURRENT_YEAR);
-    const yearsAfterCompletion = Math.max(0, analysisPeriod - yearsToCompletion);
+  // Если задана плановая цена при продаже и площадь — используем напрямую
+  if (expectedPricePerSqmAtSale && area) {
+    const expectedPrice = area * expectedPricePerSqmAtSale;
 
-    // Цена на момент сдачи
-    const priceAtCompletion = area * expectedPricePerSqmAtCompletion;
-
-    // Если сдача уже прошла — растим от текущей цены
-    if (yearsToCompletion <= 0) {
-      return calculatePropertyValue(currentPrice, inflationRate, analysisPeriod, useYearlyRates);
-    }
-
-    // Растим от плановой цены на сдачу до конца анализа
-    // Используем ставки инфляции начиная с года сдачи
-    const inflationFromCompletion = useYearlyRates && Array.isArray(inflationRate)
-      ? inflationRate.slice(yearsToCompletion)
-      : inflationRate;
-
-    return calculatePropertyValue(
-      priceAtCompletion,
-      inflationFromCompletion,
-      yearsAfterCompletion,
-      useYearlyRates
-    );
+    // Сценарии с разбросом ±10%
+    return {
+      pessimistic: Math.round(expectedPrice * 0.9),
+      base: Math.round(expectedPrice),
+      optimistic: Math.round(expectedPrice * 1.1),
+    };
   }
 
-  // Стандартный расчёт
+  // Стандартный расчёт по инфляции
   return calculatePropertyValue(currentPrice, inflationRate, analysisPeriod, useYearlyRates);
 }
 
