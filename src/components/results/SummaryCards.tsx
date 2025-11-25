@@ -10,6 +10,30 @@ export function SummaryCards() {
   const result = useComparisonResult();
   const { inputs } = useInputStore();
 
+  // Рассчитываем итоговые значения для каждой стратегии (для сравнения)
+  const renovationCost = result.strategyA.renovationCost;
+
+  const strategyAValue = result.strategyA.netProceedsFromSale.base - renovationCost;
+  const strategyBValue = result.strategyB.netEquity.base + result.strategyB.totalRentalIncome - renovationCost;
+  const strategyCValue = result.strategyC.finalBalance + renovationCost + result.strategyC.renovationSavingsInterest;
+
+  // Функция для генерации текста сравнения
+  const getComparisonText = (currentId: 'A' | 'B' | 'C') => {
+    const values = { A: strategyAValue, B: strategyBValue, C: strategyCValue };
+    const names = { A: 'ипотеки с продажей', B: 'ипотеки с арендой', C: 'вклада' };
+    const currentValue = values[currentId];
+
+    const comparisons = (Object.keys(values) as Array<'A' | 'B' | 'C'>)
+      .filter(id => id !== currentId)
+      .map(id => {
+        const diff = currentValue - values[id];
+        const sign = diff >= 0 ? '+' : '';
+        return `${sign}${formatCurrency(diff, true)} от ${names[id]}`;
+      });
+
+    return comparisons.join(', ');
+  };
+
   const cards = [
     {
       id: 'A' as const,
@@ -128,6 +152,10 @@ export function SummaryCards() {
                       </span>
                     </div>
                   ))}
+                </div>
+
+                <div className="mt-3 pt-3 border-t text-xs text-muted italic">
+                  {getComparisonText(card.id)}
                 </div>
               </CardContent>
             </Card>
