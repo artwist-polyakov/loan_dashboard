@@ -77,13 +77,22 @@ export function NumberInput({
       <div className="flex items-center gap-1">
         <Label required={required}>{label}</Label>
         {tooltip && (
-          <Tooltip>
+          <Tooltip delayDuration={0}>
             <TooltipTrigger asChild>
-              <button type="button" className="text-muted hover:text-foreground">
+              <button
+                type="button"
+                className="text-muted hover:text-foreground transition-colors touch-manipulation"
+                aria-label="Справка"
+              >
                 <HelpCircle className="h-4 w-4" />
               </button>
             </TooltipTrigger>
-            <TooltipContent className="max-w-xs">
+            <TooltipContent
+              className="max-w-xs"
+              side="top"
+              align="center"
+              sideOffset={8}
+            >
               <p>{tooltip}</p>
             </TooltipContent>
           </Tooltip>
