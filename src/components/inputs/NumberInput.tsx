@@ -36,6 +36,7 @@ export function NumberInput({
 }: NumberInputProps) {
   const [displayValue, setDisplayValue] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [tooltipOpen, setTooltipOpen] = useState(false);
 
   // Форматируем значение при изменении извне
   useEffect(() => {
@@ -77,12 +78,23 @@ export function NumberInput({
       <div className="flex items-center gap-1">
         <Label required={required}>{label}</Label>
         {tooltip && (
-          <Tooltip delayDuration={0}>
+          <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen} delayDuration={0}>
             <TooltipTrigger asChild>
               <button
                 type="button"
                 className="text-muted hover:text-foreground transition-colors touch-manipulation"
                 aria-label="Справка"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setTooltipOpen(!tooltipOpen);
+                }}
+                onPointerDown={(e) => {
+                  // Предотвращаем стандартное поведение для touch events
+                  if (e.pointerType === 'touch') {
+                    e.preventDefault();
+                  }
+                }}
               >
                 <HelpCircle className="h-4 w-4" />
               </button>
@@ -92,6 +104,7 @@ export function NumberInput({
               side="top"
               align="center"
               sideOffset={8}
+              onPointerDownOutside={() => setTooltipOpen(false)}
             >
               <p>{tooltip}</p>
             </TooltipContent>
